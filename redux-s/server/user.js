@@ -8,9 +8,10 @@ const _filter = {'pwd':0,'__v':0};
 
 
 Router.get('/list', function (req, res) {
+  const {type} = req.query
   //User.remove({},function(e,d){})
-  User.find({}, function (err, doc) {
-    return res.json(doc)
+  User.find({type}, function (err, doc) {
+    return res.json({code:0,data:doc})
   })
 })
 
