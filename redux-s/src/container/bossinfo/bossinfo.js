@@ -3,7 +3,16 @@ import React from 'react';
 
 class BossInfo extends React.Component{
   render(){
-    return <h2>BOSS完善信息页面</h2>
+    return (
+      <NavBar
+        mode="dark"
+        leftContent="Back"
+        rightContent={[
+          <Icon key="0" type="search" style={{ marginRight: '16px' }} />,
+          <Icon key="1" type="ellipsis" />,
+        ]}
+      >NavBar</NavBar>
+    )
   }
 }
 
