@@ -23,7 +23,7 @@ class AvatarSelector extends React.Component {
                                           </div>) :'请选择头像'
                                                    
     return (
-      <div>
+      <div style={{marginTop:55}}>
         <List renderHeader={()=>gridHeader}>
           <Grid 
            data={avatarList} 

@@ -4,17 +4,14 @@ import {List, InputItem, WingBlank, WhiteSpace, Button} from 'antd-mobile'
 import {connect} from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import {login} from '../../redux/user.redux'
+import xxtForm from '../../component/xxt-form/xxt-form'
 
 @connect(state => state.user, {login})
-
+@xxtForm
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      user: '',
-      pwd: ''
-    }
     this.register = this
       .register
       .bind(this)
@@ -31,14 +28,10 @@ class Login extends React.Component {
       .push('/register')
   }
 
-  handleChange(key, val) {
-    this.setState({[key]: val})
-  }
-
   handleLogin() {
     this
       .props
-      .login(this.state)
+      .login(this.props.state)
   }
 
   render() {
@@ -51,9 +44,9 @@ class Login extends React.Component {
             {this.props.msg
               ? <p className="error-msg">{this.props.msg}</p>
               : null}
-            <InputItem onChange= { v=> this.handleChange('user',v) }>用户</InputItem>
+            <InputItem onChange= { v=> this.props.handleChange('user',v) }>用户</InputItem>
             <WhiteSpace></WhiteSpace>
-            <InputItem onChange= { v=> this.handleChange('pwd',v) } type="password">密码</InputItem>
+            <InputItem onChange= { v=> this.props.handleChange('pwd',v) } type="password">密码</InputItem>
           </List>
           <WhiteSpace></WhiteSpace>
           <Button type='primary' onClick={this.handleLogin}>登录</Button>
