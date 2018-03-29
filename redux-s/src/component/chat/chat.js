@@ -44,23 +44,26 @@ class Chat extends React.Component{
       <div id='chat-page'>
         <NavBar mode='dark'>
           {this.props.match.params.user}
-        </NavBar> 
-        {this.props.chat.chatmsg.map(
-          v=>{
-            return v.from == user?(
-              <List key={v._id}>
-                <Item 
-                >{v.content}</Item>
-              </List>
-            ):(
-              <List key={v._id} className='chat-me'>
-                <Item
-                  extra={'avatar'}
-                >{v.content}</Item>
-              </List>
-            )
-          }
-        )}
+        </NavBar>
+        <div style={{marginTop:45}}>
+          {this.props.chat.chatmsg.map(
+            v=>{
+              return v.from == user?(
+                <List key={v._id}>
+                  <Item 
+                  >{v.content}</Item>
+                </List>
+              ):(
+                <List key={v._id} className='chat-me'>
+                  <Item
+                    extra={'avatar'}
+                  >{v.content}</Item>
+                </List>
+              )
+           }
+         )}
+        </div> 
+        
         <div className="stick-footer">
           <List>
             <InputItem
