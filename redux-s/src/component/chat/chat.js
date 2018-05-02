@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 import { connect } from 'react-redux'
 import { getMsgList,sendMsg,recvMsg,readMsg } from '../../redux/chat.redux' 
 import { getChatId } from '../../util';
+import QueueAnim from 'rc-queue-anim'
 
 const socket = io('ws://localhost:9093')
 
@@ -73,31 +74,34 @@ class Chat extends React.Component{
           {users[userid].name}
         </NavBar>
         <div style={{marginTop:45}}>
+         <QueueAnim delay={100}>
           {chatmsgs.map(
-            v=>{
-              let avatar;
-              if(v.from){
-                avatar = require(`../img/${users[v.from].avatar}.jpg`)
-              } else {
-                avatar = require(`../img/${users[v.to].avatar}.jpg`)
-              }
-              
-              return v.from == userid?(
-                <List key={v._id}>
-                  <Item 
-                    thumb={avatar}
-                  >{v.content}</Item>
-                </List>
-              ):(
-                <List key={v._id} >
-                  <Item
-                    extra={<img src={avatar} />}
-                    className='chat-me'
-                  >{v.content}</Item>
-                </List>
-              )
-           }
-         )}
+           v=>{
+            let avatar;
+            if(v.from){
+              avatar = require(`../img/${users[v.from].avatar}.jpg`)
+            } else {
+              avatar = require(`../img/${users[v.to].avatar}.jpg`)
+            }
+            
+            return v.from == userid?(
+              <List key={v._id}>
+                <Item 
+                  thumb={avatar}
+                >{v.content}</Item>
+              </List>
+            ):(
+              <List key={v._id} >
+                <Item
+                  extra={<img src={avatar} />}
+                  className='chat-me'
+                >{v.content}</Item>
+              </List>
+            )
+            }
+          )}
+         </QueueAnim>
+          
         </div> 
         
         <div className="stick-footer">
