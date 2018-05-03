@@ -1,6 +1,24 @@
 
+import csshook from 'css-modules-require-hook/preset'
+import assethook from 'asset-require-hook'
+
+assethook({
+  extensions:['png']
+})
+
+assethook({
+  extensions:['gif']
+})
+
 import React from 'react';
-import {renderToString,renderToStaticMarkup} from 'react-dom/server'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import { Provider } from 'react-redux'
+import { StaticRouter } from 'react-router-dom'
+import App from '../src/app'
+import {renderToString} from 'react-dom/server'
+import reducers from '../src/reducer'
+
 
 const express = require('express');
 const utils = require('utility');
@@ -17,14 +35,14 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
-app.all('/user', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://test.xxt.cn:3000");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Content-Type", "application/json;charset=utf-8");
-  next();
-});
+// app.use('/user', function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "http://test.xxt.cn:3000");
+//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Content-Type", "application/json;charset=utf-8");
+//   next();
+// });
 
 io.on('connection',function(socket){
   // console.log('user login')
@@ -47,7 +65,24 @@ app.use(function(req,res,next){
   if(req.url.startsWith('/user/')||req.url.startsWith('/static/')){
     return next()
   }
-  return res.sendFile(path.resolve('build/index.html'))
+
+  const store = createStore(reducers, compose(
+    applyMiddleware(thunk),
+  ))
+
+  let context = {}
+
+  const markup = renderToString(
+    (<Provider store={store}>
+      <StaticRouter
+       location={req.url}
+       context={context}
+      >
+        <App></App>
+      </StaticRouter>
+    </Provider>)
+  )
+  res.send(markup)
 })
 app.use('/',express.static(path.resolve('build')))
 
